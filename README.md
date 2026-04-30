@@ -1,5 +1,9 @@
 # smartmonitor-hid
 
+[![Tests](https://img.shields.io/badge/tests-16%20passing-brightgreen)](./tests)
+[![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](./LICENSE)
+[![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)](./CHANGELOG.md)
+
 Standalone Python library for 3.5" SmartMonitor HID displays on Linux.
 
 `smartmonitor-hid` is intended for projects that need to:
@@ -163,6 +167,24 @@ configure_project_root("/path/to/project")
 - [MANUAL.md](MANUAL.md) - full usage and integration guide
 - [README_RU.md](README_RU.md) - Russian overview
 - [MANUAL_RU.md](MANUAL_RU.md) - Russian usage and integration guide
+
+## Support the Project
+
+If you find this project useful, you can support the development with a donation:
+
+TON Wallet:
+
+`UQAnWldcIWfwKUmnJN5kMqW5VY6SuVwTtrnRpDEE_rilh8Qj`
+
+Bitcoin (BTC):
+
+`bc1qelwv8jm2j9pughk5rte0fap2gzvyhtgzwglutf`
+
+Ethereum (ETH):
+
+`0x6Ab5F41A4eF61E6F7517f4D89f759c94500e66e1`
+
+Every donation helps keep the project alive and motivates further development. Thank you!
 
 ## Tests
 
