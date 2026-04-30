@@ -13,6 +13,9 @@
 Эта библиотека держит SmartMonitor HID protocol и workflow тем отдельно от
 обычных bitmap-driven приложений для дисплеев.
 
+Активный репозиторий:
+- https://github.com/Agentry433/smartmonitor_hid_lib
+
 ## Возможности
 
 - автоопределение HID-устройства через `hidraw`

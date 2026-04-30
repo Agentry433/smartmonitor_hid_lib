@@ -14,6 +14,11 @@ authors = [
 ]
 dependencies = ["Pillow>=10.0"]
 
+[project.urls]
+Homepage = "https://github.com/Agentry433/smartmonitor_hid_lib"
+Repository = "https://github.com/Agentry433/smartmonitor_hid_lib"
+Issues = "https://github.com/Agentry433/smartmonitor_hid_lib/issues"
+
 [project.scripts]
 smartmonitor-hid = "smartmonitor_hid.cli:main"
 

@@ -13,6 +13,9 @@ Standalone Python library for 3.5" SmartMonitor HID displays on Linux.
 This library exists to keep the SmartMonitor HID protocol and theme workflow
 separate from bitmap-driven monitor applications.
 
+Active repository:
+- https://github.com/Agentry433/smartmonitor_hid_lib
+
 ## Features
 
 - HID auto-detection via `hidraw`
