@@ -98,6 +98,11 @@ with SmartMonitorHidTransport.auto() as transport:
 - `parse_imgdat_file(...)`
 - `ThemeCompiler()`
 - `compile_theme_file(...)`
+- `describe_theme_bundle(...)`
+- `validate_theme_bundle(...)`
+- `compile_report(...)`
+- `add_widget(...)`, `duplicate_widget(...)`, `remove_widget(...)`
+- `set_widget_sensor(...)`, `set_widget_datetime_format(...)`
 
 Пример:
 
@@ -109,6 +114,46 @@ compiler = ThemeCompiler()
 compiled = compiler.compile_ui_file("theme.ui")
 Path("img.dat").write_bytes(compiled)
 ```
+
+### API валидации и отчётов
+
+Используйте:
+- `describe_theme_bundle(...)`
+- `list_runtime_tags(...)`
+- `list_supported_metrics(...)`
+- `validate_theme_bundle(...)`
+- `compile_report(...)`
+
+Это рекомендуемый способ понять, что тема реально умеет, какие runtime-поля
+она содержит и какие проблемы в ней есть ещё до загрузки в монитор.
+
+### API программного редактирования тем
+
+Используйте:
+- `find_widget(...)`
+- `add_widget(...)`
+- `duplicate_widget(...)`
+- `remove_widget(...)`
+- `move_widget(...)`
+- `set_widget_geometry(...)`
+- `set_widget_sensor(...)`
+- `clear_widget_sensor(...)`
+- `set_widget_datetime_format(...)`
+
+Этот слой нужен для программного редактирования тем без GUI-редактора.
+
+### Managed Runtime Service
+
+Используйте:
+- `SmartMonitorRuntimeService`
+- `RuntimeServiceConfig`
+- `RuntimeServiceStats`
+
+Этот слой нужен приложениям, которым требуется:
+- периодически отправлять метрики
+- периодически синхронизировать время
+- автоматически восстанавливаться после transport errors
+- запускать runtime loop в фоне, не переписывая эту логику заново
 
 ## Типовые сценарии
 
@@ -234,6 +279,36 @@ smartmonitor-hid upload-theme theme.dat
 smartmonitor-hid send-time
 ```
 
+## Вариант D: Использовать готовый runtime service
+
+Если не хочется писать собственный runtime loop, можно использовать встроенный
+service-слой:
+
+```python
+from smartmonitor_hid import RuntimeServiceConfig, SmartMonitorClient, SmartMonitorRuntimeService
+
+
+def collect_metrics():
+    return {
+        "CPU_TEMP": 43,
+        "CPU_PERCENT": 12,
+    }
+
+
+with SmartMonitorClient.auto() as client:
+    service = SmartMonitorRuntimeService(
+        client=client,
+        tag_mapping={"CPU_TEMP": 1, "CPU_PERCENT": 3},
+        metric_collector=collect_metrics,
+        config=RuntimeServiceConfig(
+            tick_interval=1.0,
+            send_time_on_start=True,
+            time_sync_interval=60.0,
+        ),
+    )
+    service.start_background()
+```
+
 ## Что важно знать про tag mapping
 
 Монитор не получает named metrics вроде `"CPU_TEMP"` напрямую.
@@ -296,6 +371,9 @@ PYTHONPATH=src python3 -m unittest discover -s tests -v
 - runtime mapping
 - client behavior
 - CLI parser и bridge handling
+- validation/reporting API
+- theme manipulation API
+- managed runtime service
 - `.ui` roundtrip
 - `.img.dat` parsing
 - standalone compile flow

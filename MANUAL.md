@@ -98,6 +98,11 @@ Use:
 - `parse_imgdat_file(...)`
 - `ThemeCompiler()`
 - `compile_theme_file(...)`
+- `describe_theme_bundle(...)`
+- `validate_theme_bundle(...)`
+- `compile_report(...)`
+- `add_widget(...)`, `duplicate_widget(...)`, `remove_widget(...)`
+- `set_widget_sensor(...)`, `set_widget_datetime_format(...)`
 
 Example:
 
@@ -109,6 +114,46 @@ compiler = ThemeCompiler()
 compiled = compiler.compile_ui_file("theme.ui")
 Path("img.dat").write_bytes(compiled)
 ```
+
+### Validation and Reporting API
+
+Use:
+- `describe_theme_bundle(...)`
+- `list_runtime_tags(...)`
+- `list_supported_metrics(...)`
+- `validate_theme_bundle(...)`
+- `compile_report(...)`
+
+This is the recommended way to inspect a theme before integrating it into a
+project or compiling it for a device.
+
+### Theme Manipulation API
+
+Use:
+- `find_widget(...)`
+- `add_widget(...)`
+- `duplicate_widget(...)`
+- `remove_widget(...)`
+- `move_widget(...)`
+- `set_widget_geometry(...)`
+- `set_widget_sensor(...)`
+- `clear_widget_sensor(...)`
+- `set_widget_datetime_format(...)`
+
+This layer is meant for programmatic theme editing without a GUI editor.
+
+### Managed Runtime Service
+
+Use:
+- `SmartMonitorRuntimeService`
+- `RuntimeServiceConfig`
+- `RuntimeServiceStats`
+
+This layer is for applications that want:
+- periodic metric sending
+- optional periodic time sync
+- reconnect/recover handling on transport errors
+- background-thread execution without writing their own loop from scratch
 
 ## Typical Usage Patterns
 

@@ -9,6 +9,7 @@ from .client import SmartMonitorClient
 from .compiler import ThemeCompiler
 from .imgdat import parse_imgdat_file
 from .protocol import ThemeSensorSpec, ThemeWidgetSpec
+from .report import compile_report, describe_theme_bundle, list_supported_metrics, validate_theme_bundle
 from .runtime import build_tag_mapping, get_theme_runtime_rows
 from .transport import SmartMonitorHidTransport
 from .ui import parse_theme_bundle
@@ -84,6 +85,25 @@ def _cmd_map_ui(args: argparse.Namespace) -> int:
     return 0
 
 
+def _cmd_describe_ui(args: argparse.Namespace) -> int:
+    bundle = parse_theme_bundle(args.ui)
+    print(json.dumps(describe_theme_bundle(bundle).to_dict(), ensure_ascii=False, indent=2))
+    return 0
+
+
+def _cmd_validate_ui(args: argparse.Namespace) -> int:
+    bundle = parse_theme_bundle(args.ui)
+    report = validate_theme_bundle(bundle)
+    print(json.dumps(report.to_dict(), ensure_ascii=False, indent=2))
+    return 0 if report.ok else 1
+
+
+def _cmd_compile_report(args: argparse.Namespace) -> int:
+    bundle = parse_theme_bundle(args.ui)
+    print(json.dumps(compile_report(bundle).to_dict(), ensure_ascii=False, indent=2))
+    return 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="smartmonitor-hid")
     parser.add_argument(
@@ -119,6 +139,18 @@ def build_parser() -> argparse.ArgumentParser:
     map_ui = subparsers.add_parser("map-ui", help="Show runtime tag mapping rows for a .ui theme")
     map_ui.add_argument("ui", help="Path to .ui file")
     map_ui.set_defaults(func=_cmd_map_ui)
+
+    describe_ui = subparsers.add_parser("describe-ui", help="Show a structured summary for a .ui theme")
+    describe_ui.add_argument("ui", help="Path to .ui file")
+    describe_ui.set_defaults(func=_cmd_describe_ui)
+
+    validate_ui = subparsers.add_parser("validate-ui", help="Validate a .ui theme and report warnings/errors")
+    validate_ui.add_argument("ui", help="Path to .ui file")
+    validate_ui.set_defaults(func=_cmd_validate_ui)
+
+    compile_report_ui = subparsers.add_parser("compile-report", help="Compile a .ui theme and show a structured report")
+    compile_report_ui.add_argument("ui", help="Path to .ui file")
+    compile_report_ui.set_defaults(func=_cmd_compile_report)
 
     return parser
 

@@ -5,6 +5,26 @@ All notable changes to `smartmonitor-hid` will be documented in this file.
 The format is based on Keep a Changelog, and the project follows a simple
 `major.minor.patch` versioning scheme.
 
+## [0.2.0] - 2026-05-01
+
+### Added
+
+- Validation and reporting API:
+  - `describe_theme_bundle(...)`
+  - `list_runtime_tags(...)`
+  - `list_supported_metrics(...)`
+  - `validate_theme_bundle(...)`
+  - `compile_report(...)`
+- Theme manipulation API:
+  - widget lookup, duplication, removal, movement, geometry updates, sensor updates, and DateTime format updates
+- Managed runtime service:
+  - periodic metric sending
+  - optional time sync
+  - reconnect/recover handling
+  - background-thread runtime loop
+- Extended English and Russian documentation for the new APIs
+- Expanded test coverage for reporting, theme editing, and runtime service behavior
+
 ## [0.1.0] - 2026-05-01
 
 ### Added

@@ -1,6 +1,6 @@
 # smartmonitor-hid
 
-[![Tests](https://img.shields.io/badge/tests-16%20passing-brightgreen)](./tests)
+[![Tests](https://img.shields.io/badge/tests-31%20passing-brightgreen)](./tests)
 [![License](https://img.shields.io/badge/license-GPL--3.0--or--later-blue.svg)](./LICENSE)
 [![Version](https://img.shields.io/badge/version-0.1.0-orange.svg)](./CHANGELOG.md)
 
@@ -26,7 +26,10 @@ Active repository:
 - SmartMonitor reset / YMODEM theme upload
 - runtime metric packet sender
 - datetime packet sender
+- managed runtime loop / reconnect helpers
 - runtime tag mapping helpers
+- theme validation and reporting API
+- theme manipulation API for programmatic editing
 - standalone `.ui` parser / writer
 - standalone `.img.dat` parser / record packer
 - standalone `.ui -> img.dat` compiler
@@ -122,6 +125,50 @@ with SmartMonitorClient.auto() as client:
 
     mapping = client.build_theme_tag_mapping(widgets)
     client.send_runtime_metrics(mapping, {"CPU_TEMP": 42})
+```
+
+## Validation and Reporting
+
+```python
+from smartmonitor_hid import compile_report, describe_theme_bundle, parse_theme_bundle, validate_theme_bundle
+
+bundle = parse_theme_bundle("theme.ui")
+description = describe_theme_bundle(bundle)
+validation = validate_theme_bundle(bundle)
+report = compile_report(bundle)
+```
+
+## Theme Manipulation
+
+```python
+from smartmonitor_hid import duplicate_widget, parse_theme_bundle, set_widget_datetime_format, set_widget_sensor
+
+bundle = parse_theme_bundle("theme.ui")
+duplicate_widget(bundle, object_name="clock", new_object_name="clock_copy", dx=10, dy=0)
+set_widget_datetime_format(bundle, object_name="clock_copy", datetime_format="yyyy-MM-dd")
+set_widget_sensor(
+    bundle,
+    object_name="cpu_temp",
+    fast_sensor=1,
+    sensor_type_name="Temperature",
+    sensor_name="CPU Package",
+    reading_name="CPU Temperature",
+)
+```
+
+## Managed Runtime Service
+
+```python
+from smartmonitor_hid import RuntimeServiceConfig, SmartMonitorClient, SmartMonitorRuntimeService
+
+with SmartMonitorClient.auto() as client:
+    service = SmartMonitorRuntimeService(
+        client=client,
+        tag_mapping={"CPU_TEMP": 1, "CPU_PERCENT": 3},
+        metric_collector=lambda: {"CPU_TEMP": 44, "CPU_PERCENT": 18},
+        config=RuntimeServiceConfig(tick_interval=1.0, time_sync_interval=60.0),
+    )
+    service.start_background()
 ```
 
 ## Command Line Interface
